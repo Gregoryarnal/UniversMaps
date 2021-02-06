@@ -6,14 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<a th:href="@{/popup/{id}(id=Jupiter)}">
+<!-- <a class="object" th:attr="@{/popup/{id}(id=Saturn)}" data-toggle="modal" data-target="#exampleModalLong">
 
 	<img id="saturne" th:src="@{/photos/saturne.png}" alt="saturne"/>
 	
-</a>
+</a> -->
+
+
+
+<!-- Button trigger modal -->
+
+<div class="container">
+
+  <!-- Trigger the modal with a img -->
+  <div th:each="planet : ${planets}">
+	  <a class="object"   data-toggle="modal" th:data-target="${'#'+planet.name}">
+			<img id="saturne"  th:src="@{'/photos/' + ${planet.name} + '.png'}" th:alt="${planet.name}"/>
+		</a>
+		
+		  <!-- Modal -->
+	  <div class="modal fade" th:id="${planet.name}" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title" th:text="${planet.name}"></h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>Chargement des données.</p>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+	  </div>
+		
+  </div>
+	
+	
+
+  
+</div>
+
+
    
 </body>
 </html>
