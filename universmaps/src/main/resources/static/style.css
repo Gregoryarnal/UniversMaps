@@ -1,8 +1,336 @@
-header {background-color: lightblue;}
+html {
+  background-color: #012;
+}
+
+header.page-header {
+padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+  z-index:100;
+}
+
 
 img{
-	text-aligne: center;
-	width: 300px;  
-	height: auto;  
 
+   left: 50%;
+   position: absolute;
+   top: 90%;
+   width: 10%;
+ 	transform: translate(-50%, -50%);
+ 	z-index:100;
+}
+
+@-webkit-keyframes rot-merc {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-102px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-102px) rotate(-360deg);
+  }
+}
+@-keyframes rot-merc {
+  from {
+    transform: rotate(0deg) translatey(-102px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-102px) rotate(-360deg);
+  }
+}
+
+
+#Mercury{
+
+	width: 3%;
+	margin: -1.5%;
+	-webkit-animation: rot-merc 15s infinite linear;
+  	animation: rot-merc 15s infinite linear;
+}
+
+.Mercury-path {
+  width: 204px;
+  height: 204px;
+  border-radius: 50%;
+transform: translate(-102px, -102px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+@-webkit-keyframes rot-venus {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-118px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-118px) rotate(-360deg);
+  }
+}
+@-keyframes rot-venus {
+  from {
+    transform: rotate(0deg) translatey(-118px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-118px) rotate(-360deg);
+  }
+}
+
+
+#Venus{
+
+	width: 3%;
+	margin: -1.5%;
+	-webkit-animation: rot-venus 13s infinite linear;
+  	animation: rot-venus 13s infinite linear;
+}
+
+.Venus-path {
+  width: 236px;
+  height: 236px;
+  border-radius: 50%;
+transform: translate(-118px, -118px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+@-webkit-keyframes rot-earth {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-228px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-228px) rotate(-360deg);
+  }
+}
+@-keyframes rot-earth {
+  from {
+    transform: rotate(0deg) translatey(-228px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-228px) rotate(-360deg);
+  }
+}
+
+
+#Earth{
+
+	width: 5%;
+	margin: -2.5%;
+	-webkit-animation: rot-earth 11s infinite linear;
+  	animation: rot-earth 11s infinite linear;
+}
+
+.Earth-path {
+  width: 456px;
+  height: 456px;
+  border-radius: 50%;
+transform: translate(-228px, -228px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+@-webkit-keyframes rot-mars {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-362px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-362px) rotate(-360deg);
+  }
+}
+@-keyframes rot-mars {
+  from {
+    transform: rotate(0deg) translatey(-362px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-362px) rotate(-360deg);
+  }
+}
+
+
+#Mars{
+
+	width: 4%;
+	margin: -2%;
+	-webkit-animation: rot-mars 9s infinite linear;
+  	animation: rot-mars 9s infinite linear;
+}
+
+.Mars-path {
+  width: 724px;
+  height: 724px;
+  border-radius: 50%;
+transform: translate(-362px, -362px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+-webkit-keyframes rot-jupiter {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-450px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-450px) rotate(-360deg);
+  }
+}
+@-keyframes rot-jupiter {
+  from {
+    transform: rotate(0deg) translatey(-450px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-450px) rotate(-360deg);
+  }
+}
+
+
+#Jupiter{
+
+	width: 8%;
+	margin: -4%;
+	-webkit-animation: rot-jupiter 20s infinite linear;
+  	animation: rot-jupiter 20s infinite linear;
+}
+
+.Jupiter-path {
+  width: 900px;
+  height: 900px;
+  border-radius: 50%;
+transform: translate(-450px, -450px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+-webkit-keyframes rot-saturn {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-648px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-648px) rotate(-360deg);
+  }
+}
+@-keyframes rot-saturn {
+  from {
+    transform: rotate(0deg) translatey(-648px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-648px) rotate(-360deg);
+  }
+}
+
+
+#Saturn{
+
+	width: 8%;
+	margin: -4%;
+	-webkit-animation: rot-saturn 20s infinite linear;
+  	animation: rot-saturn 20s infinite linear;
+}
+
+.Saturn-path {
+  width: 1296px;
+  height: 1296px;
+  border-radius: 50%;
+transform: translate(-648px, -648px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+
+-webkit-keyframes rot-uranus {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-750px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-750px) rotate(-360deg);
+  }
+}
+@-keyframes rot-uranus {
+  from {
+    transform: rotate(0deg) translatey(-750px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-750px) rotate(-360deg);
+  }
+}
+
+
+#Uranus{
+
+	width: 8%;
+	margin: -4%;
+	-webkit-animation: rot-uranus 20s infinite linear;
+  	animation: rot-uranus 20s infinite linear;
+}
+
+.Uranus-path {
+  width: 1500px;
+  height: 1500px;
+  border-radius: 50%;
+transform: translate(-750px, -750px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
+}
+
+-webkit-keyframes rot-neptune {
+  from {
+    -webkit-transform: rotate(0deg) translatey(-800px) rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translatey(-800px) rotate(-360deg);
+  }
+}
+@-keyframes rot-neptune {
+  from {
+    transform: rotate(0deg) translatey(-800px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translatey(-800px) rotate(-360deg);
+  }
+}
+
+
+#Neptune{
+
+	width: 8%;
+	margin: -4%;
+	-webkit-animation: rot-uranus 20s infinite linear;
+  	animation: rot-uranus 20s infinite linear;
+}
+
+.Neptune-path {
+  width: 1600;
+  height: 1600;
+  border-radius: 50%;
+transform: translate(-800px, -800px);
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  border: solid 1px #444;
+  z-index:1;
 }
