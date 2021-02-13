@@ -3,7 +3,21 @@ package universmaps.dto;
 public class PlanetsDTO {
 	private Integer id;	
 	private String name;
+	private String[] dataType;
+	private String[][] data;
 	
+	public String[] getDataType() {
+		return dataType;
+	}
+	public void setDataType(String[] dataType) {
+		this.dataType = dataType;
+	}
+	public String[][] getData() {
+		return data;
+	}
+	public void setData(String[][] data) {
+		this.data = data;
+	}
 	public Integer getId() {
 		return id;
 	}

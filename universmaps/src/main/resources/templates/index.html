@@ -30,11 +30,26 @@
 	  function alertContents() {
 		  if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	  	      if (httpRequest.status === 200) {
-	  	    	document.getElementById("data"+planet).innerHTML = httpRequest.responseText;
+	  	    	var data=httpRequest.responseText;
+	  	    	var jsonResponse = JSON.parse(data);
+	  	    	var len = Object.keys(jsonResponse).length;
+	  	    	var keys = Object.keys(jsonResponse);
+	  	    	if (len == 0){document.getElementById("data"+planet+"load").innerHTML = "Pas de données...";}
+	  	    	else{document.getElementById("data"+planet+"load").style.display = 'none';}
+	  	    	for (var i = 0; i < len-1; i++)
+	  	    	{
+	  	    		var name = keys[i];
+	  	    		console.log( name + "  : " + jsonResponse[name]);
+	  	    		document.getElementById("data"+planet+""+name).innerHTML = name + "  :  " + jsonResponse[name];
+	  	    		document.getElementById("data"+planet+""+name).style.display = 'block';
+	  	    	}
+	  	    	//document.getElementById("data"+planet+).innerHTML = jsonResponse["abstractd"];
+	  		    httpRequest = -1
 	  	      } else {
 	  	        alert('Il y a eu un problème avec la requête.');
 	  	      }
 	  	    }
+
 	  }
 	  
 
@@ -44,8 +59,9 @@
 </head>
 
 <header class="page-header">
-    <h1>Cute Puppies Express!</h1>
+    <h1>UniversMaps!</h1>
 </header>
+
 <body>
 
 <div class="container">
@@ -67,9 +83,79 @@
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	          <h4 class="modal-title" th:text="${planet.name}"></h4>
 	        </div>
-	        <div th:id="${'data'+planet.name}" class="modal-body">
+	        <div th:id="${'data'+planet.name+'load'}" class="modal-body">
 	          <p>Chargement des données.</p>
 	        </div>
+	        <div th:id="${'data'+planet.name+'name'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'abstractd'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'atmosphereComposition'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'averageSpeed'}"style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'formerName'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'orbitalPeriod'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        
+	        <div th:id="${'data'+planet.name+'periapsis'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'surfaceGrav'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'density'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'apoapsis'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'volume'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'satellites'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        
+	        <div th:id="${'data'+planet.name+'escapeVelocity'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        
+	        <div th:id="${'data'+planet.name+'childLabel'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'date'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	         <div th:id="${'data'+planet.name+'discoverer'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'dist'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'perimeter'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'area'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'diameter'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'period'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        <div th:id="${'data'+planet.name+'mass'}" style="display:none;" class="modal-body">
+	          <p></p>
+	        </div>
+	        
 	        <div class="modal-footer">
 	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	        </div>
