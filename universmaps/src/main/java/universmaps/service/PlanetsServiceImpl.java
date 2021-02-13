@@ -2,6 +2,7 @@ package universmaps.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -71,67 +72,17 @@ public class PlanetsServiceImpl implements PlanetsService{
 	        return new PlanetsDTO(a.getName());
 	    }
 
-	@Override
-	public void setData(String name, String[][] data) {
-		// TODO Auto-generated method stub
-		Planets pla = planetsrepository.findByName(name);
-		int size  = this.sizeof(data);
-		for(int i = 0; i < size ; i++) {
-			if (data[i][0].equals("density")) {
-				pla.setDensity(data[i][1]);
-			}else if (data[i][0].equals("averageSpeed")) {
-				pla.setAverageSpeed(data[i][1]);
-			}else if (data[i][0].equals("atmosphereComposition")) {
-				pla.setAtmosphereComposition(data[i][1]);
-			}else if (data[i][0].equals("formerName")) {
-				pla.setFormerName(data[i][1]);
-			}else if (data[i][0].equals("orbitalPeriod")) {
-				pla.setOrbitalPeriod(data[i][1]);
-			}else if (data[i][0].equals("periapsis")) {
-				pla.setPeriapsis(data[i][1]);
-			}else if (data[i][0].equals("satellites")) {
-				pla.setSatellites(data[i][1]);
-			}else if (data[i][0].equals("surfaceGrav")) {
-				pla.setSurfaceGrav(data[i][1]);
-			}else if (data[i][0].equals("escapeVelocity")) {
-				pla.setEscapeVelocity(data[i][1]);
-			}else if (data[i][0].equals("apoapsis")) {
-				pla.setApoapsis(data[i][1]);
-			}else if (data[i][0].equals("abstractd")) {
-				pla.setAbstractd(data[i][1]);
-			}else if (data[i][0].equals("volume")) {
-				pla.setVolume(data[i][1]);
-			}
-		}
-	}
-
-
-	@Override
-	public void setDataType(String name, String[] type) {
-		// TODO Auto-generated method stub
-		planetsrepository.findByName(name).setDataType(type);
-	}
-
-	@Override
-	public String[] getDataType(String name) {
-		// TODO Auto-generated method stub
-		return planetsrepository.findByName(name).getDataType();
-	}
-	
 	
 	public JSONObject SearchData(String planetname) throws JSONException {
-		// TODO Auto-generated method stub
-		
-       
-        //                + "?s dbp:surfacePressure ?surfacePressure .\n" 
+
         JSONObject json = new JSONObject();
         
         this.searchDatadbpedia(planetname, json);
         this.SearchDatawiki(planetname, json);
-        //setDataType(name, type);
-        //setData(name, data);
+
 		return json;
     }
+	
 	public void doRequest(String szEndpoint, String szQuery,JSONObject json ) throws JSONException {
 		 Query query = QueryFactory.create(szQuery);
 
@@ -155,16 +106,38 @@ public class PlanetsServiceImpl implements PlanetsService{
 
             // Count
             iCount++;
-            //System.out.println("Result " + iCount + ": ");
+            System.out.println("Result " + iCount + ": ");
 
             // Display Result
             while (itVars.hasNext()) {
                 String szVar = itVars.next().toString();
                 String szVal = qs.get(szVar).toString();
-                
+                System.out.println(szVar + "  : " + szVal);
                 if (!szVar.equals("s")) {
                 	String val = szVal.split("http")[0];
-                    json.put(szVar, val);
+                	String[] data;
+                	if (json.has(szVar)) {
+                		try {
+                			data = (String[]) json.get(szVar);
+                		}catch(Exception e){
+                			data = new String[1];
+                			data[0]= (String) json.get(szVar);
+                		}
+                			
+                		if (!Arrays.asList(data).contains(val)) {
+                			String[] result = new String[data.length + 1];
+	                   		 for (int i = 0; i <= data.length -1 ;i++) {
+	                   			 result[i] = data[i];
+	                   		 }
+	                   		 result[result.length-1] = val;
+	                   		 json.put(szVar, result);
+                		}
+                		
+                	}else {
+                		json.put(szVar, val);
+                		
+                	}
+                   
                 }
             }
             
@@ -234,7 +207,7 @@ public class PlanetsServiceImpl implements PlanetsService{
         this.doRequest(szEndpoint,szQuery, json);
     }
 	
-	public int sizeof(String[][] data) {
+	public int sizeOf(String[][] data) {
 		int size = 0;
 		for (int i = 0; i<data.length-1; i++) {
 			if ( ! data[i][0].isEmpty()) {
@@ -244,37 +217,5 @@ public class PlanetsServiceImpl implements PlanetsService{
 		return size;
 	}
 
-	@Override
-	public String getData(String name, String dataType) {
-		// TODO Auto-generated method stub
-		System.out.println("Get data :" + dataType + " pour " + name);
-		Planets pla = planetsrepository.findByName(name);
-		
-		if (dataType.equals("density")) {
-			return pla.getDensity();
-		}else if (dataType.equals("averageSpeed")) {
-			return pla.getAverageSpeed();
-		}else if (dataType.equals("atmosphereComposition")) {
-			return pla.getAtmosphereComposition();
-		}else if (dataType.equals("formerName")) {
-			return pla.getFormerName();
-		}else if (dataType.equals("orbitalPeriod")) {
-			return pla.getOrbitalPeriod();
-		}else if (dataType.equals("periapsis")) {
-			return pla.getPeriapsis();
-		}else if (dataType.equals("satellites")) {
-			return pla.getSatellites();
-		}else if (dataType.equals("surfaceGrav")) {
-			return pla.getSurfaceGrav();
-		}else if (dataType.equals("escapeVelocity")){
-			return pla.getEscapeVelocity();
-		}else if (dataType.equals("apoapsis")) {
-			return pla.getApoapsis();
-		}else if (dataType.equals("abstractd")) {
-			return pla.getAbstractd();
-		}else if (dataType.equals("volume")) {
-			return pla.getVolume();
-		}
-		return null;
-	}
+
 }

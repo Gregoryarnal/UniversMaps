@@ -12,13 +12,6 @@ public interface PlanetsService {
 	
 	List<PlanetsDTO> getPlanets();
 	
-	void setData( String name, String[][] data);
-	
-	String getData( String name, String dataType);
-	String[] getDataType(String name);
-	
 	JSONObject SearchData(String planetname) throws JSONException;
-
-	void setDataType(String name, String[] type);
 
 }
