@@ -79,7 +79,7 @@ public class PlanetsServiceImpl implements PlanetsService{
         
         this.searchDatadbpedia(planetname, json);
         this.SearchDatawiki(planetname, json);
-
+        this.cleanData(json);
 		return json;
     }
 	
@@ -106,15 +106,16 @@ public class PlanetsServiceImpl implements PlanetsService{
 
             // Count
             iCount++;
-            System.out.println("Result " + iCount + ": ");
+            //System.out.println("Result " + iCount + ": ");
 
             // Display Result
             while (itVars.hasNext()) {
                 String szVar = itVars.next().toString();
                 String szVal = qs.get(szVar).toString();
-                System.out.println(szVar + "  : " + szVal);
+
                 if (!szVar.equals("s")) {
                 	String val = szVal.split("http")[0];
+                	val = val.substring(0,val.length()-2);
                 	String[] data;
                 	if (json.has(szVar)) {
                 		try {
@@ -129,6 +130,7 @@ public class PlanetsServiceImpl implements PlanetsService{
 	                   		 for (int i = 0; i <= data.length -1 ;i++) {
 	                   			 result[i] = data[i];
 	                   		 }
+	                   		 
 	                   		 result[result.length-1] = val;
 	                   		 json.put(szVar, result);
                 		}
@@ -191,14 +193,11 @@ public class PlanetsServiceImpl implements PlanetsService{
 	                + "OPTIONAL { ?s dbp:atmosphereComposition ?atmosphereComposition .}\n" 
 					+ "OPTIONAL { ?s dbo:formerName ?formerName .}\n" 
 					+ "OPTIONAL { ?s dbo:orbitalPeriod ?orbitalPeriod .}\n" 
-					+ "OPTIONAL { ?s dbo:periapsis ?periapsis .}\n" 
 					+ "OPTIONAL { ?s dbp:satellites ?satellites .}\n"
 	                + "?s dbp:name ?name .\n" 
 					+ "OPTIONAL { ?s dbp:surfaceGrav ?surfaceGrav .}\n" 
 					+ "OPTIONAL { ?s dbo:escapeVelocity ?escapeVelocity .}\n" 
-					+ "OPTIONAL { ?s dbo:apoapsis ?apoapsis .}\n"
 	                + "OPTIONAL { ?s dbo:abstract ?abstractd .}\n" 
-	                + "OPTIONAL { ?s dbo:volume ?volume .}\n"
 	                + "filter langMatches(lang(?abstractd), 'fr') .\n"
 	                + "filter not exists{ filter contains(str(?abstractd), 'Erde') . }\n"
 	                + "filter (str(?name) = '"+ name +"') .\n"
@@ -218,4 +217,61 @@ public class PlanetsServiceImpl implements PlanetsService{
 	}
 
 
+	public void cleanData(JSONObject json) throws JSONException {
+		Iterator keys = json.keys();
+		while(keys.hasNext()) {
+			String key = (String) keys.next();
+			String[] data;
+			try {
+    			data = (String[]) json.get(key);
+    		}catch(Exception e){
+    			data = new String[1];
+    			data[0]= (String) json.get(key);
+    		}
+			if (key.equals("dist") && data.length >= 2) {
+				int a;
+				int b;
+				if(Integer.parseInt(data[0])>Integer.parseInt(data[1])) {
+					a = 0;
+					b = 1;
+				}else {
+					a = 1;
+					b = 0;
+				}
+				data[a]= "Distance de la terre à l'apogée : " + data[a] +" km.\n";
+				data[b]= "Distance de la terre au périgée : " + data[b] +" km.";
+				
+			}else if (key.equals("mass")) {
+				data[0] = "La masse est de : " + data[0] + " yottagram.";
+			}else if (key.equals("satellites")) {
+				data[0] = "Possède " + data[0] + " satellites.";
+			}else if (key.equals("volume")) {
+				data[0] = "Fait " + data[0] + " m^3";
+			}else if (key.equals("averageSpeed")) {
+				data[0] = "Vitesse moyenne " + data[0] + " km/h.";
+			}else if (key.equals("area")) {
+				data[0] = "L'aire est de " + data[0] + " km^2.";
+			}else if (key.equals("period")) {
+				data[0] = "Met " + data[0] + " jours pour faire le tour du soleil.";
+			}else if (key.equals("density")) {
+				data[0] = "Fait " + data[0] + " kg par m^3.";
+			}else if (key.equals("surfaceGrav")) {
+				data[0] = "La gravité est de " + data[0];
+			}else if (key.equals("escapeVelocity")) {
+				data[0] = "Vitesse de libération " + data[0];
+			}else if (key.equals("date")) {
+				data[0] = "Découvert le " + data[0];
+			}else if (key.equals("discoverer")) {
+				data[0] = "Découvert par " + data[0];
+			}else if (key.equals("childLabel")) {
+				data[0] = "Les objets suivants orbitent autour : " + data[0];
+			}else if (key.equals("perimeter")) {
+				data[0] = "Le perimetre de l'astre est de : " + data[0] + " km.";
+			}else if (key.equals("diameter")) {
+				data[0] = "Le diameter de l'astre est de : " + data[0] + " km.";
+			}
+			
+			json.put(key, data);
+		}
+	}
 }
