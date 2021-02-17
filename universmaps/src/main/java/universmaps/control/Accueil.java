@@ -30,38 +30,27 @@ public class Accueil {
 	PositionControl control;
 
     @GetMapping("/")
-    public String accueil(Model model) throws ParseException, IOException {
+    public String accueil(Model model) throws ParseException, IOException, JSONException {
     	if (planetsservice.getPlanets().size() == 0) {
     		planetsservice.instantiate();
-    		control = new PositionControl(planetsservice.getPlanets());
+    		planetsservice.instantiateplanetliste();
     	}
     	model.addAttribute("planets", planetsservice.getPlanets() );
+    	model.addAttribute("planetsList", planetsservice.getListPlanets() );
         return "index";
     }
     
     @GetMapping("/popup/{name}")
     public ResponseEntity<String> dataLoad(@PathVariable("name") String name, Model model) throws ParseException, JSONException {
-    	//@{/photos/saturne.png}
     	System.out.println(name);
-        //System.out.println("on va envoyer la query");
+
     	JSONObject data = planetsservice.SearchData(name);
     	System.out.println("search data done");
-    	//String[] dataType = planetsservice.getDataType(name);
-    	//System.out.println("dataType done : " + dataType[1]);
-    	//String nam = planetsservice.getData(name, dataType[1]);
-    	
+
     	
         return new ResponseEntity<>(
         	      data.toString(), 
         	      HttpStatus.OK);
-    }
-    
-    
-    @GetMapping("/position")
-    public void updatePosition(Model model) throws ParseException {
-
-    	control.updatePosition();
-
     }
     
     

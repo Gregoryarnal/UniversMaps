@@ -10,6 +10,8 @@ public class Planets {
 	private Integer id;	
 	
 	private String name;
+	private Boolean affichage;
+	
 	
 	private String[] dataType;
 	private String density;
@@ -139,9 +141,10 @@ public class Planets {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Planets(String name) {
+	public Planets(String name, Boolean affichage) {
 		super();
 		this.name = name;
+		this.affichage = affichage;
 	}
 	
 	Planets(){

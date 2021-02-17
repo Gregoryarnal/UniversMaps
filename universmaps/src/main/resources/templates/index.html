@@ -21,6 +21,7 @@
 	      return false;
 	    }
 	    planet = name;
+	    
 	    httpRequest.onreadystatechange = alertContents;
 	    httpRequest.open('GET', '/popup/'+ name);
 	    httpRequest.send();
@@ -39,7 +40,7 @@
 	  	    	for (var i = 0; i < len-1; i++)
 	  	    	{
 	  	    		var name = keys[i];
-	  	    		console.log( name + "  : " + jsonResponse[name]);
+	  	    		console.log(jsonResponse[name]);
 	  	    		document.getElementById("data"+planet+""+name).innerHTML =  jsonResponse[name];
 	  	    		document.getElementById("data"+planet+""+name).style.display = 'block';
 	  	    	}
@@ -64,9 +65,29 @@
 
 <body>
 
+
+
+
+		
+		  <!-- Modal -->
+	  
+
 <div class="container">
 
   <!-- Trigger the modal with a img -->
+  
+  <select name="planets" id="planets-select" onChange='makeRequest(this.value)'>
+    <option value="">--Please choose an option--</option>
+    
+    <option th:each="planet : ${planetsList}"
+             th:value="${planet.name}"
+             th:text="${planet.name}" th:attr="onclick=|makeRequest('${planet.name}')|" data-toggle="modal" th:data-target="${'#'+planet.name+'modal'}"/>
+
+</select>
+
+
+  <!-- Trigger the modal with a img -->
+  
   <div th:each="planet : ${planets}">
    <div th:class="${planet.name+'-path'}"></div>
 	  <a th:class="${planet.name}"  th:attr="onclick=|makeRequest('${planet.name}')|"  data-toggle="modal" th:data-target="${'#'+planet.name+'modal'}">
@@ -123,7 +144,6 @@
 	        <div th:id="${'data'+planet.name+'satellites'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>
-	        
 	        <div th:id="${'data'+planet.name+'escapeVelocity'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>

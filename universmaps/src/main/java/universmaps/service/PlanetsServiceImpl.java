@@ -1,5 +1,6 @@
 package universmaps.service;
-
+import java.util.Iterator; 
+import java.util.Map; 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import javax.transaction.Transactional;
@@ -36,42 +38,50 @@ public class PlanetsServiceImpl implements PlanetsService{
 	PlanetsRepository planetsrepository;
 	
 	@Override
-	public PlanetsDTO instantiate() {
+	public PlanetsDTO instantiate() throws JSONException {
 		// TODO Auto-generated method stub
     	ConfigReader config = new ConfigReader();
     	Properties prop;
     	try {
 			 prop = config.read();
 			 String[] names = prop.getProperty("planet").split(",");
-			 
+			 JSONObject json = this.instantiateplanetliste();
 			 for(int i = 0; i < names.length ; i++) {
-				 System.out.println("Instantiate : " + names[i]);
-				 planetsrepository.save(new Planets(names[i]));
+				 planetsrepository.save(new Planets(names[i], true));
 			 }
+       
+			String[] planetslist = (String[]) json.get("itemLabel"); 
+			
+			for (int i = 0 ; i < planetslist.length-1 ; i++) {
+				planetsrepository.save(new Planets(planetslist[i].substring(0, planetslist[i].length() -1 ), false));
+			}
 			 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    	
 		return null;
 	}
 
 	@Override
 	public List<PlanetsDTO> getPlanets() {
 		// TODO Auto-generated method stub
-		return mapTicketToDTO(planetsrepository.findAll()) ;
+		return mapTicketToDTO(planetsrepository.findByAffichage(true)) ;
 	}
 
 	 private static List<PlanetsDTO> mapTicketToDTO(Collection<Planets> planets) {
-	        return planets.stream().map(a -> buildDTO(a)).collect(Collectors.toList());
-	    }
+        return planets.stream().map(a -> buildDTO(a)).collect(Collectors.toList());
+    }
 	 
 	 private static PlanetsDTO buildDTO(Planets a) {
-	        return new PlanetsDTO(a.getName());
-	    }
+        return new PlanetsDTO(a.getName());
+    }
 
+	public JSONObject instantiateplanetliste() throws JSONException {
+		JSONObject json = new JSONObject();
+		this.SearchListDatawiki(json);
+		return json;
+	}
 	
 	public JSONObject SearchData(String planetname) throws JSONException {
 
@@ -156,7 +166,7 @@ public class PlanetsServiceImpl implements PlanetsService{
         String szQuery = "PREFIX bd: <http://www.bigdata.com/rdf#>\n"
         		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
                 + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "PREFIX wd: <http://www.wikidata.org/entity/>\n"
-                + "SELECT  distinct ?childLabel ?date ?dist ?perimeter ?area ?diameter ?period ?mass ?discovererlabel where {\n" 
+                + "SELECT  distinct ?childLabel ?date ?dist ?perimeter ?area ?diameter ?period ?mass ?discovererLabel where {\n" 
                 + "?planet ?planetLabel '"+ name +"' . \n"
                 + "?planet wdt:P361 ?Q7879772 . \n"
                 + "OPTIONAL { ?planet wdt:P398 ?child . }\n" 
@@ -175,6 +185,21 @@ public class PlanetsServiceImpl implements PlanetsService{
         this.doRequest(szEndpoint,szQuery, json);
     }
 	
+	
+	public void SearchListDatawiki(JSONObject json) throws JSONException {
+		
+		String szEndpoint = "http://query.wikidata.org/sparql";
+        String szQuery = "PREFIX bd: <http://www.bigdata.com/rdf#>\n"
+        		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
+                + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "PREFIX wd: <http://www.wikidata.org/entity/>\n"
+                + "SELECT  ?itemLabel \n" 
+                + "WHERE {  \n"
+                + "?item wdt:P31 ?sub0 . ?sub0 (wdt:P279)* wd:Q634  \n"
+                + "SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n"
+                + "} limit 100" ;
+        this.doRequest(szEndpoint,szQuery, json);
+	              
+	}
 	public void searchDatadbpedia(String planetname, JSONObject json) throws JSONException {
 		// TODO Auto-generated method stub
 		
@@ -273,5 +298,11 @@ public class PlanetsServiceImpl implements PlanetsService{
 			
 			json.put(key, data);
 		}
+	}
+
+	@Override
+	public List<PlanetsDTO> getListPlanets() {
+		// TODO Auto-generated method stub
+		return mapTicketToDTO(planetsrepository.findByAffichage(false)) ;
 	}
 }
