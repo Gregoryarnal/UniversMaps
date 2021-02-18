@@ -14,7 +14,14 @@
   <script>
 	  var httpRequest
 	  var planet
+	  
+
+	  function setPopup(name){
+		  $('#'+name+"modal").modal('toggle');
+		  makeRequest(name);
+	  }
 	  function makeRequest(name) {
+		  
 	    httpRequest = new XMLHttpRequest();
 	    if (!httpRequest) {
 	      alert('Abandon :( Impossible de créer une instance de XMLHTTP');
@@ -40,7 +47,6 @@
 	  	    	for (var i = 0; i < len-1; i++)
 	  	    	{
 	  	    		var name = keys[i];
-	  	    		console.log(jsonResponse[name]);
 	  	    		document.getElementById("data"+planet+""+name).innerHTML =  jsonResponse[name];
 	  	    		document.getElementById("data"+planet+""+name).style.display = 'block';
 	  	    	}
@@ -65,18 +71,11 @@
 
 <body>
 
-
-
-
-		
-		  <!-- Modal -->
-	  
-
 <div class="container">
 
   <!-- Trigger the modal with a img -->
   
-  <select name="planets" id="planets-select" onChange='makeRequest(this.value)'>
+  <select name="planets" id="planets-select" onChange='setPopup(this.value)'>
     <option value="">--Please choose an option--</option>
     
     <option th:each="planet : ${planetsList}"
@@ -94,6 +93,9 @@
 			<img th:id="${planet.name}"  th:src="@{'/photos/' + ${planet.name} + '.png'}" th:alt="${planet.name}"/>
 		</a>
 		
+	</div>
+	
+<div th:each="planet : ${allplanets}">
 		  <!-- Modal -->
 	  <div class="modal fade" th:id="${planet.name+'modal'}" role="dialog">
 	    <div class="modal-dialog">

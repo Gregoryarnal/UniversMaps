@@ -62,7 +62,13 @@ public class PlanetsServiceImpl implements PlanetsService{
 		}
 		return null;
 	}
-
+	
+	
+	public List<PlanetsDTO> getAllPlanets() {
+		// TODO Auto-generated method stub
+		return mapTicketToDTO(planetsrepository.findAll()) ;
+	}
+	
 	@Override
 	public List<PlanetsDTO> getPlanets() {
 		// TODO Auto-generated method stub

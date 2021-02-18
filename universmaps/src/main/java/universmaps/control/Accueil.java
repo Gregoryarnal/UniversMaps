@@ -37,6 +37,7 @@ public class Accueil {
     	}
     	model.addAttribute("planets", planetsservice.getPlanets() );
     	model.addAttribute("planetsList", planetsservice.getListPlanets() );
+    	model.addAttribute("allplanets", planetsservice.getAllPlanets() );
         return "index";
     }
     
@@ -47,7 +48,7 @@ public class Accueil {
     	JSONObject data = planetsservice.SearchData(name);
     	System.out.println("search data done");
 
-    	
+    	System.out.println(data.toString());
         return new ResponseEntity<>(
         	      data.toString(), 
         	      HttpStatus.OK);

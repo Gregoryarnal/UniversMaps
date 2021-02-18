@@ -12,6 +12,7 @@ public interface PlanetsService {
 	
 	List<PlanetsDTO> getPlanets();
 	List<PlanetsDTO> getListPlanets();
+	List<PlanetsDTO> getAllPlanets();
 	
 	JSONObject SearchData(String planetname) throws JSONException;
 	
