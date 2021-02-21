@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import universmaps.service.DataService;
 import universmaps.service.PlanetsService;
 
 import java.io.IOException;
@@ -25,9 +24,6 @@ public class Accueil {
 	
 	@Autowired
 	PlanetsService planetsservice;
-	
-	
-	PositionControl control;
 
     @GetMapping("/")
     public String accueil(Model model) throws ParseException, IOException, JSONException {
@@ -57,3 +53,7 @@ public class Accueil {
     
    
 }
+
+
+
+

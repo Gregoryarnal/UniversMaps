@@ -50,10 +50,15 @@ public class PlanetsServiceImpl implements PlanetsService{
 				 planetsrepository.save(new Planets(names[i], true));
 			 }
        
-			String[] planetslist = (String[]) json.get("itemLabel"); 
+			String[] planetslist = (String[]) json.get("name"); 
 			
 			for (int i = 0 ; i < planetslist.length-1 ; i++) {
-				planetsrepository.save(new Planets(planetslist[i].substring(0, planetslist[i].length() -1 ), false));
+				String name = planetslist[i].substring(0, planetslist[i].length() -1 );
+				
+				if (planetsrepository.findByName(name) == null) {
+					planetsrepository.save(new Planets(name, false));
+				}
+				
 			}
 			 
 		} catch (IOException e) {
@@ -100,7 +105,8 @@ public class PlanetsServiceImpl implements PlanetsService{
     }
 	
 	public void doRequest(String szEndpoint, String szQuery,JSONObject json ) throws JSONException {
-		 Query query = QueryFactory.create(szQuery);
+		System.out.println(szQuery);
+		Query query = QueryFactory.create(szQuery);
 
         // Create the Execution Factory using the given Endpoint
         QueryExecution qexec = QueryExecutionFactory.sparqlService(szEndpoint, query);
@@ -130,8 +136,14 @@ public class PlanetsServiceImpl implements PlanetsService{
                 String szVal = qs.get(szVar).toString();
 
                 if (!szVar.equals("s")) {
-                	String val = szVal.split("http")[0];
-                	val = val.substring(0,val.length()-2);
+                	String val;
+                	if(szVar.equals("img")) {
+                		val = szVal;
+                	}else {
+                		val = szVal.split("http")[0];
+                    	val = val.substring(0,val.length()-2);
+                	}
+
                 	String[] data;
                 	if (json.has(szVar)) {
                 		try {
@@ -165,29 +177,64 @@ public class PlanetsServiceImpl implements PlanetsService{
 	
 	public void SearchDatawiki(String planetname, JSONObject json) throws JSONException {
 		// TODO Auto-generated method stub
-		
         String name = planetname;
 
         String szEndpoint = "http://query.wikidata.org/sparql";
-        String szQuery = "PREFIX bd: <http://www.bigdata.com/rdf#>\n"
-        		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
-                + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "PREFIX wd: <http://www.wikidata.org/entity/>\n"
-                + "SELECT  distinct ?childLabel ?date ?dist ?perimeter ?area ?diameter ?period ?mass ?discovererLabel where {\n" 
-                + "?planet ?planetLabel '"+ name +"' . \n"
-                + "?planet wdt:P361 ?Q7879772 . \n"
-                + "OPTIONAL { ?planet wdt:P398 ?child . }\n" 
-                + "OPTIONAL { ?planet wdt:P2583 ?dist . }\n" 
-				+ "OPTIONAL { ?planet wdt:P2046 ?area . }\n" 
-				+ "OPTIONAL { ?planet wdt:P2547 ?perimeter . }\n" 
-				+ "OPTIONAL { ?planet wdt:P2286 ?diameter . }\n" 
-				+ "OPTIONAL { ?planet wdt:P2146 ?period . }\n"
-				+ "OPTIONAL { ?planet wdt:P575 ?date . }\n"
-				+ "OPTIONAL { ?planet wdt:P61 ?discoverer . }\n"
-                + "OPTIONAL { ?planet wdt:P2067 ?mass . }\n" 
-				+ "SERVICE wikibase:label {\n" 
-				+ "bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],fr,ar,be,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,he,hi,hu,hy,id,it,ja,jv,ko,nb,nl,eo,pa,pl,pt,ro,ru,sh,sk,sr,sv,sw,te,th,tr,uk,yue,vec,vi,zh\"\n" 
-				+ " }\n"
-                + "}"; 
+        
+		Planets planet = planetsrepository.findByName(planetname);
+		String szQuery;
+		
+		if (planet.getAffichage()) {
+
+			
+			szQuery = "PREFIX bd: <http://www.bigdata.com/rdf#>\n"
+	        		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
+	                + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "PREFIX wd: <http://www.wikidata.org/entity/>\n"
+	                + "SELECT  distinct ?childLabel ?date ?dist ?perimeter ?area ?diameter ?period ?mass ?discovererLabel where {\n" 
+	                + "?planet ?planetLabel '"+ name +"' . \n"
+	                + "?planet wdt:P361 ?Q7879772 . \n"
+	                + "OPTIONAL { ?planet wdt:P398 ?child . }\n" 
+	                + "OPTIONAL { ?planet wdt:P2583 ?dist . }\n" 
+					+ "OPTIONAL { ?planet wdt:P2046 ?area . }\n" 
+					+ "OPTIONAL { ?planet wdt:P2547 ?perimeter . }\n" 
+					+ "OPTIONAL { ?planet wdt:P2286 ?diameter . }\n" 
+					+ "OPTIONAL { ?planet wdt:P2146 ?period . }\n"
+					+ "OPTIONAL { ?planet wdt:P575 ?date . }\n"
+					+ "OPTIONAL { ?planet wdt:P61 ?discoverer . }\n"
+	                + "OPTIONAL { ?planet wdt:P2067 ?mass . }\n" 
+					+ "SERVICE wikibase:label {\n" 
+					+ "bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],fr,ar,be,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,he,hi,hu,hy,id,it,ja,jv,ko,nb,nl,eo,pa,pl,pt,ro,ru,sh,sk,sr,sv,sw,te,th,tr,uk,yue,vec,vi,zh\"\n" 
+					+ " }\n"
+	                + "}"; 
+		}else {
+			szQuery  =  "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" 
+		        		+ "PREFIX wd: <http://www.wikidata.org/entity/>\n" 
+		        		+"PREFIX bd: <http://www.bigdata.com/rdf#>\n"
+		        		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
+			 			+ "SELECT  distinct ?date ?dist ?img ?perimeter ?area ?diameter  ?mass ?discovererLabel where {\n"
+			 			+ "?planet wdt:P31 ?sub0 . \n"
+			 			+ "?sub0 (wdt:P279)* wd:Q634 . \n"
+			 			+ "?planet ?planetLabel ?planet_name . \n"
+			 			+ "OPTIONAL { ?planet wdt:P398 ?child . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P18 ?img . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P2583 ?dist . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P2046 ?area . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P2547 ?perimeter . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P2286 ?diameter . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P575 ?date . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P61 ?discoverer . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P2067 ?mass . }\n"
+			 			+ "OPTIONAL { ?planet wdt:P18 ?img . }\n"
+			 			+ "FILTER(((LANG(?planet_name)) = \"en\")) .\n"
+			 			+ "\n"
+			 			+ "FILTER((REGEX(STR(?planet_name), '"+name+"', \"i\"))) . \n"
+			 			+ "  SERVICE wikibase:label {\n"
+			 			+ "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],fr,en\"}\n"
+			 			+ "}";
+						
+		}
+
+		 
         this.doRequest(szEndpoint,szQuery, json);
     }
 	
@@ -198,10 +245,13 @@ public class PlanetsServiceImpl implements PlanetsService{
         String szQuery = "PREFIX bd: <http://www.bigdata.com/rdf#>\n"
         		+ "PREFIX wikibase: <http://wikiba.se/ontology#>\n"
                 + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "PREFIX wd: <http://www.wikidata.org/entity/>\n"
-                + "SELECT  ?itemLabel \n" 
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" 
+                + "SELECT  ?name \n" 
                 + "WHERE {  \n"
-                + "?item wdt:P31 ?sub0 . ?sub0 (wdt:P279)* wd:Q634  \n"
-                + "SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n"
+                + "?item wdt:P31 ?sub0 . ?sub0 (wdt:P279)* wd:Q634 . \n"
+                + "?item rdfs:label ?name .\n"
+                + "FILTER(((LANG(?name)) = \"en\")) .\n"
+                + "FILTER(!contains(str(?name), \" \")) .\n"
                 + "} limit 100" ;
         this.doRequest(szEndpoint,szQuery, json);
 	              
@@ -262,7 +312,7 @@ public class PlanetsServiceImpl implements PlanetsService{
 			if (key.equals("dist") && data.length >= 2) {
 				int a;
 				int b;
-				if(Integer.parseInt(data[0])>Integer.parseInt(data[1])) {
+				if(Long.parseLong(data[0])>Long.parseLong(data[1])) {
 					a = 0;
 					b = 1;
 				}else {
@@ -291,8 +341,8 @@ public class PlanetsServiceImpl implements PlanetsService{
 			}else if (key.equals("escapeVelocity")) {
 				data[0] = "Vitesse de libération " + data[0];
 			}else if (key.equals("date")) {
-				data[0] = "Découvert le " + data[0];
-			}else if (key.equals("discoverer")) {
+				data[0] = "Découvert le " + data[0].split("T")[0];
+			}else if (key.equals("discoverer_name")) {
 				data[0] = "Découvert par " + data[0];
 			}else if (key.equals("childLabel")) {
 				data[0] = "Les objets suivants orbitent autour : " + data[0];

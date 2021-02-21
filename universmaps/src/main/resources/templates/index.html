@@ -43,12 +43,23 @@
 	  	    	var len = Object.keys(jsonResponse).length;
 	  	    	var keys = Object.keys(jsonResponse);
 	  	    	if (len == 0){document.getElementById("data"+planet+"load").innerHTML = "Pas de données...";}
-	  	    	else{document.getElementById("data"+planet+"load").style.display = 'none';}
+	  	    	else{
+	  	    		document.getElementById("data"+planet+"load").style.display = 'none';
+	  	    		}
 	  	    	for (var i = 0; i < len-1; i++)
 	  	    	{
 	  	    		var name = keys[i];
-	  	    		document.getElementById("data"+planet+""+name).innerHTML =  jsonResponse[name];
-	  	    		document.getElementById("data"+planet+""+name).style.display = 'block';
+	  	    		if (name == 'img'){
+	  	    			document.getElementById("data"+planet+"img").src =  jsonResponse[name];
+	  	    			document.getElementById("data"+planet).style.display = 'block';
+	  	    		}else{
+	  	    			console.log(name + " and " + jsonResponse[name])
+	  	    			document.getElementById("data"+planet+""+name).innerHTML =  jsonResponse[name];
+	  	    			document.getElementById("data"+planet+""+name).style.display = 'block';
+	  	    		}
+	  	    		
+	  	    		
+	  	    		
 	  	    	}
 	  	    	//document.getElementById("data"+planet+).innerHTML = jsonResponse["abstractd"];
 	  		    httpRequest = -1
@@ -106,12 +117,23 @@
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	          <h4 class="modal-title" th:text="${planet.name}"></h4>
 	        </div>
+	        
+	        
+	
 	        <div th:id="${'data'+planet.name+'load'}" class="modal-body">
 	          <p>Chargement des données.</p>
 	        </div>
 	        <div th:id="${'data'+planet.name+'name'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>
+	        
+	        <div th:id="${'data'+planet.name}" style="display:none;" class="modal-body">
+	        	<p>
+	        		<img th:id="${'data'+planet.name+'img'}" src="" style="width:200px;margin:105px"/>
+	        	</p>
+	        </div>
+	        
+	        
 	        <div th:id="${'data'+planet.name+'abstractd'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>
@@ -156,7 +178,7 @@
 	        <div th:id="${'data'+planet.name+'date'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>
-	         <div th:id="${'data'+planet.name+'discoverer'}" style="display:none;" class="modal-body">
+	         <div th:id="${'data'+planet.name+'discoverer_name'}" style="display:none;" class="modal-body">
 	          <p></p>
 	        </div>
 	        <div th:id="${'data'+planet.name+'dist'}" style="display:none;" class="modal-body">
